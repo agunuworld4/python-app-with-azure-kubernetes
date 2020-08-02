@@ -63,9 +63,10 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-          
-    - upload: manifests
-      artifact: manifests
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: 'manifests'
+        artifact: 'manifests'
 
 - stage: Deploy
   displayName: Deploy stage
