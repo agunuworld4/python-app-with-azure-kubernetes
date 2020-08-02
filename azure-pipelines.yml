@@ -22,7 +22,7 @@ stages:
         containerRegistry: 'azure-pipeline-docker-hub-service-connection'
         repository: 'agunuworld/python-project'
         command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: '$(Build.SourcesDirectory)/python-application/Dockerfile'
         tags: '$(tag)'
     - task: CopyFiles@2
       inputs:
