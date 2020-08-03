@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: test
-        image: agunuworld/python-project
+        image: aksxyzcontainer.azurecr.io/agunuworldpythonappdev4
         imagePullPolicy: Always
 
 ---
