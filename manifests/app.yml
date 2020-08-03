@@ -6,7 +6,7 @@ spec:
   ports:
   - port: 80
     protocol: TCP
-    targetPort: 8080
+    targetPort: 5000
   selector:
     app: gosample
   type: LoadBalancer
@@ -29,7 +29,7 @@ spec:
       - name: gosample
         image: aksxyzcontainer.azurecr.io/agunuworldpythonappdev4
         ports:
-        - containerPort: 8080
+        - containerPort: 5000
         resources:
           requests:
             cpu: 500m
