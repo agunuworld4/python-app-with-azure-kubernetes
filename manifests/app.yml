@@ -1,11 +1,11 @@
-apiVersion: apps/v1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: python-app
   labels:
     name: python-app
 spec:
-  replicas: 2
+  replicas: 1
   minReadySeconds: 60
   strategy:
     type: RollingUpdate
@@ -46,7 +46,7 @@ spec:
   maxReplicas: 3
   minReplicas: 1
   scaleTargetRef:
-    apiVersion: apps/v1
+    apiVersion: extensions/v1beta1
     kind: Deployment
     name: python-app
   targetCPUUtilizationPercentage: 80
