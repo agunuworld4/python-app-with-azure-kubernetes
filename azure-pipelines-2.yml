@@ -57,9 +57,12 @@ stages:
             - task: KubernetesManifest@0
               displayName: Create imagePullSecret
               inputs:
-                action: createSecret
-                secretName: $(imagePullSecret)
-                dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
+                action: 'createSecret'
+                kubernetesServiceConnection: 'Dev4-aksk8s-default-1596413715921'
+                namespace: 'default'
+                secretType: 'dockerRegistry'
+                secretName: '$(imagePullSecret)'
+                dockerRegistryEndpoint: 'azure-acr-connection-service-dev4'
                 
             - task: KubernetesManifest@0
               displayName: Deploy to Kubernetes cluster
