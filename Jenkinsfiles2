@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+    environment {
+        mavenHome = tool 'myMaven4'
+        PATH = "$mavenHome/bin:$PATH"
+        registryCredential = 'myAwsAuthenticationPluginLogins'
+        DOCKER_TAG = getDockerTag()
+    }
+   
+    stages {
+        stage('Checkout') {
+			steps {
+				echo "PATH - $PATH"
+				echo "BUILD_NUMBER - $env.BUILD_NUMBER"
+				echo "BUILD_URL - $env.BUILD_URL"
+			}
+		}
+         stage( 'Build Docker Image'){
+             steps{
+              sh "docker build . -t 311301640590.dkr.ecr.us-east-2.amazonaws.com/mytrunk:${DOCKER_TAG}"
+             }
+         }
+
+    stage('Upload Image to ECR') {
+     steps{   
+         script {
+            docker.withRegistry( 'https://311301640590.dkr.ecr.us-east-2.amazonaws.com', "ecr:us-east-2:$registryCredential" ) {
+             // dockerImage.push();dockerImage.push('latest');
+             sh "docker push 311301640590.dkr.ecr.us-east-2.amazonaws.com/mytrunk:${DOCKER_TAG} "
+            }
+        }
+      }
+    }
+
+    stage('stop previous containers') {
+         steps {
+            sh 'docker ps -f name=pythonApplication -q | xargs --no-run-if-empty docker container stop'
+            sh 'docker container ls -a -fname=pythonApplication -q | xargs -r docker container rm'
+         }
+       }
+      
+    stage('Docker Run') {
+     steps{
+         script {
+                sh 'docker run -d -p 8085:5000 --rm --name pythonApplication 311301640590.dkr.ecr.us-east-2.amazonaws.com/mytrunk:${DOCKER_TAG}'
+            }
+      }
+    }
+    
+}
+
+  }
+
+def getDockerTag(){
+    def tag  = sh script: 'git rev-parse HEAD', returnStdout: true
+    return tag
+}
